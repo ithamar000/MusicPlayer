@@ -17,6 +17,8 @@ import androidx.core.app.NotificationCompat;
 
 public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
 
+    final int NOTIF_ID = 1;
+
     MediaPlayer mediaPlayer = new MediaPlayer();
     int currentPlaying = 0;
 
@@ -64,6 +66,16 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         prevIntent.putExtra("command", "prev");
         PendingIntent prevPendingIntent = PendingIntent.getService(this, 3, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.prev_btn, prevPendingIntent);
+
+        Intent closeIntent = new Intent(this, MusicService.class);
+        closeIntent.putExtra("command", "close");
+        PendingIntent closePendingIntent = PendingIntent.getService(this, 4, closeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.close_btn, closePendingIntent);
+
+        builder.setCustomContentView(remoteViews);
+        builder.setSmallIcon(android.R.drawable.ic_media_play);
+
+        startForeground(NOTIF_ID, builder.build());
     }
 
     @Override
@@ -78,6 +90,26 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        String command = intent.getStringExtra("command");
+
+        switch (command){
+            case ("play"):
+                if (!mediaPlayer.isPlaying())
+                    mediaPlayer.start();
+                break;
+            case ("pause"):
+                if (mediaPlayer.isPlaying())
+                    mediaPlayer.pause();
+                break;
+            case ("next"):
+                //ADD FUNCTIONALITY
+                break;
+            case ("prev"):
+                break;
+            case ("close"):
+                break;
+        }
+
         return super.onStartCommand(intent, flags, startId);
     }
 

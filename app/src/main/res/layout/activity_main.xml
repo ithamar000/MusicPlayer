@@ -7,5 +7,12 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="50dp"
+        android:text="WELCOME"
+        android:gravity="center"
+        android:padding="50dp"/>
 
 </LinearLayout>
