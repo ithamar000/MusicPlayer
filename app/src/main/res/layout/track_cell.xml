@@ -14,7 +14,7 @@
         android:src="@mipmap/ic_launcher_round"
         android:layout_gravity="start"
         android:layout_margin="10dp"
-        android:id="@+id/song_image"
+        android:id="@+id/track_cell_image"
         android:layout_marginStart="10dp"/>
 
     <LinearLayout
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:text="Song title"
-            android:id="@+id/title"
+            android:id="@+id/track_cell_title"
             android:layout_margin="5dp"/>
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:text="artist"
-            android:id="@+id/artist"
+            android:id="@+id/track_cell_artist"
             android:layout_marginStart="5dp" />
 
     </LinearLayout>
