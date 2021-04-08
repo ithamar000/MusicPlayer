@@ -26,6 +26,8 @@
             android:padding="5dp"
             android:id="@+id/song_title"/>
 
+
+
     </LinearLayout>
 
     <LinearLayout

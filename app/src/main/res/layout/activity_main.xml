@@ -33,11 +33,12 @@
         android:layout_weight="8"
         android:layout_margin="25dp">
 
-        <TextView
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pending recycler view"
-            android:textSize="20dp"/>
+            android:layout_height="match_parent"
+            android:id="@+id/recycler_view"/>
+
+
     </LinearLayout>
 
     <LinearLayout

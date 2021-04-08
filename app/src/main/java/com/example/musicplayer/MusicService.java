@@ -47,6 +47,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.music_notif);
 
+
         Intent playIntent = new Intent(this, MusicService.class);
         playIntent.putExtra("command", "play");
         PendingIntent playPendingIntent = PendingIntent.getService(this, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
