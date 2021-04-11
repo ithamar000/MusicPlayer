@@ -26,6 +26,11 @@ public class MainActivity extends AppCompatActivity {
 
     SharedPreferences sp;
     ArrayList<Track> trackList;
+    ImageButton playImageButton;
+    ImageButton pauseImageButton;
+    ImageButton nextImageButton;
+    ImageButton prevImageButton;
+    ImageButton addSongImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +76,13 @@ public class MainActivity extends AppCompatActivity {
         TrackAdapter trackAdapter = new TrackAdapter(trackList, this);
         recyclerView.setAdapter(trackAdapter);
 
-        ImageButton playImageButton = findViewById(R.id.play_btn);
+        playImageButton = findViewById(R.id.play_btn);
+        pauseImageButton = findViewById(R.id.pause_btn);
+        nextImageButton = findViewById(R.id.next_btn);
+        prevImageButton = findViewById(R.id.prev_btn);
+        addSongImageButton = findViewById(R.id.add_song_btn);
+
+
         playImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +93,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        pauseImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,MusicService.class);
+                intent.putExtra("command","pause");
+                startService(intent);
+            }
+        });
 
+        nextImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,MusicService.class);
+                intent.putExtra("command","next");
+                startService(intent);
+            }
+        });
+
+        prevImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,MusicService.class);
+                intent.putExtra("command","prev");
+                startService(intent);
+            }
+        });
+
+        addSongImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO start new activity
+            }
+        });
     }
 
     @Override

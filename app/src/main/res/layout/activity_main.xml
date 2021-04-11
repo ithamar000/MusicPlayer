@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_baseline_add_24"
-            android:id="@+id/add_song" />
+            android:id="@+id/add_song_btn" />
 
     </LinearLayout>
 

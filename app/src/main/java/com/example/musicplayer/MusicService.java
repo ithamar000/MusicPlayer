@@ -102,17 +102,17 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
                 if(!mediaPlayer.isPlaying()){
                     trackList = (ArrayList<Track>) intent.getSerializableExtra("trackList");
                     try{
+                        //mediaPlayer.reset(); ?????????
                         mediaPlayer.setDataSource(trackList.get(0).getTrackLink());
                         mediaPlayer.prepareAsync();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    break;
                 }
+                break;
             case ("play"):
                 if (!mediaPlayer.isPlaying())
                     mediaPlayer.start();
-
                 break;
             case ("pause"):
                 if (mediaPlayer.isPlaying())
@@ -124,6 +124,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
             case ("prev"):
                 break;
             case ("close"):
+                stopSelf();
                 break;
         }
 
