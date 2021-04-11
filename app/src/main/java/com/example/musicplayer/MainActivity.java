@@ -12,12 +12,20 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.ImageButton;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     SharedPreferences sp;
+    ArrayList<Track> trackList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ArrayList<Track> trackList = new ArrayList<Track>();
-        //if (!sp.contains("firstRunFlag")){
+        trackList = new ArrayList<Track>();
+        if (!sp.contains("firstRunFlag")){
             trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
             "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
             "One more cup of coffee",
@@ -44,43 +52,21 @@ public class MainActivity extends AppCompatActivity {
                     "https://images-na.ssl-images-amazon.com/images/I/71a7yWLeyTL._SL1500_.jpg",
                     "The man in me",
                     "Bob Dylan"));
-        trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
-                "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
-                "One more cup of coffee",
-                "Bob Dylan"));
-        trackList.add(new Track("https://www.syntax.org.il/xtra/bob1.m4a",
-                "https://i1.sndcdn.com/artworks-000148133727-rhhdkf-t500x500.jpg",
-                "Sara",
-                "Bob Dylan"));
-        trackList.add(new Track("https://www.syntax.org.il/xtra/bob2.mp3",
-                "https://images-na.ssl-images-amazon.com/images/I/71a7yWLeyTL._SL1500_.jpg",
-                "The man in me",
-                "Bob Dylan"));
-        trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
-                "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
-                "One more cup of coffee",
-                "Bob Dylan"));
-        trackList.add(new Track("https://www.syntax.org.il/xtra/bob1.m4a",
-                "https://i1.sndcdn.com/artworks-000148133727-rhhdkf-t500x500.jpg",
-                "Sara",
-                "Bob Dylan"));
-        trackList.add(new Track("https://www.syntax.org.il/xtra/bob2.mp3",
-                "https://images-na.ssl-images-amazon.com/images/I/71a7yWLeyTL._SL1500_.jpg",
-                "The man in me",
-                "Bob Dylan"));
-        trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
-                "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
-                "One more cup of coffee",
-                "Bob Dylan"));
-        trackList.add(new Track("https://www.syntax.org.il/xtra/bob1.m4a",
-                "https://i1.sndcdn.com/artworks-000148133727-rhhdkf-t500x500.jpg",
-                "Sara",
-                "Bob Dylan"));
-        trackList.add(new Track("https://www.syntax.org.il/xtra/bob2.mp3",
-                "https://images-na.ssl-images-amazon.com/images/I/71a7yWLeyTL._SL1500_.jpg",
-                "The man in me",
-                "Bob Dylan"));
-        //}
+        }
+        else{
+            try {
+                FileInputStream fis = openFileInput("trackList");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                trackList = (ArrayList<Track>) ois.readObject();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
 
         TrackAdapter trackAdapter = new TrackAdapter(trackList, this);
         recyclerView.setAdapter(trackAdapter);
@@ -105,5 +91,18 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("firstRunFlag", false);
         editor.commit();
+
+        try {
+            FileOutputStream fos = openFileOutput("trackList", MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(trackList);
+            oos.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
