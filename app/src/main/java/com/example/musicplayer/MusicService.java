@@ -15,10 +15,14 @@ import android.widget.RemoteViews;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class MusicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
 
     final int NOTIF_ID = 1;
 
+    ArrayList<Track> trackList = new ArrayList<Track>();
     MediaPlayer mediaPlayer = new MediaPlayer();
     int currentPlaying = 0;
 
@@ -94,9 +98,21 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         String command = intent.getStringExtra("command");
 
         switch (command){
+            case ("new_instance"):
+                if(!mediaPlayer.isPlaying()){
+                    trackList = (ArrayList<Track>) intent.getSerializableExtra("trackList");
+                    try{
+                        mediaPlayer.setDataSource(trackList.get(0).getTrackLink());
+                        mediaPlayer.prepareAsync();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
             case ("play"):
                 if (!mediaPlayer.isPlaying())
                     mediaPlayer.start();
+
                 break;
             case ("pause"):
                 if (mediaPlayer.isPlaying())
