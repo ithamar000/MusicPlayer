@@ -1,18 +1,18 @@
 package com.example.musicplayer;
 
-public class Track {
+import java.io.Serializable;
+
+public class Track implements Serializable {
     private String trackLink;
     private String picLink;
     private String title;
     private String artist;
-    private String duration;
 
-    public Track(String trackLink, String picLink, String title, String artist, String duration) {
+    public Track(String trackLink, String picLink, String title, String artist) {
         this.trackLink = trackLink;
         this.picLink = picLink;
         this.title = title;
         this.artist = artist;
-        this.duration = duration;
     }
 
     public String getTrackLink() {
@@ -31,7 +31,4 @@ public class Track {
         return artist;
     }
 
-    public String getDuration() {
-        return duration;
-    }
 }

@@ -1,7 +1,6 @@
 package com.example.musicplayer;
 
 import android.content.Context;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
-public class trackAdapter extends RecyclerView.Adapter<trackAdapter.TrackViewHolder> {
+public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHolder> {
 
     private List<Track> trackList;
     private Context context;
 
-    public trackAdapter(List<Track> trackList, Context context) {
+    public TrackAdapter(List<Track> trackList, Context context) {
         this.trackList = trackList;
         this.context = context;
     }
