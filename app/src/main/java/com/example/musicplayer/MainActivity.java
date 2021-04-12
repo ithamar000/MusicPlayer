@@ -64,6 +64,32 @@ public class MainActivity extends AppCompatActivity {
                     "https://images-na.ssl-images-amazon.com/images/I/71a7yWLeyTL._SL1500_.jpg",
                     "The man in me",
                     "Bob Dylan"));
+            trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
+                    "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
+                    "One more cup of coffee",
+                    "Bob Dylan"));
+            trackList.add(new Track("https://www.syntax.org.il/xtra/bob1.m4a",
+                    "https://i1.sndcdn.com/artworks-000148133727-rhhdkf-t500x500.jpg",
+                    "Sara",
+                    "Bob Dylan"));
+            trackList.add(new Track("https://www.syntax.org.il/xtra/bob2.mp3",
+                    "https://images-na.ssl-images-amazon.com/images/I/71a7yWLeyTL._SL1500_.jpg",
+                    "The man in me",
+                    "Bob Dylan"));
+            trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
+                    "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
+                    "One more cup of coffee",
+                    "Bob Dylan"));
+            trackList.add(new Track("https://www.syntax.org.il/xtra/bob1.m4a",
+                    "https://i1.sndcdn.com/artworks-000148133727-rhhdkf-t500x500.jpg",
+                    "Sara",
+                    "Bob Dylan"));
+            trackList.add(new Track("https://www.syntax.org.il/xtra/bob2.mp3",
+                    "https://images-na.ssl-images-amazon.com/images/I/71a7yWLeyTL._SL1500_.jpg",
+                    "The man in me",
+                    "Bob Dylan"));
+
+
         }
         else{
             try {

@@ -46,6 +46,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
             trackImageIv = itemView.findViewById(R.id.track_cell_image);
             trackTitleTv = itemView.findViewById(R.id.track_cell_title);
             trackArtistTv = itemView.findViewById(R.id.track_cell_artist);
+            trackTitleTv.setSelected(true);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
