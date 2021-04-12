@@ -200,8 +200,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getSupportFragmentManager();
-                AddSongDialogFragment editNameDialogFragment = AddSongDialogFragment.newInstance("Some Title");
-                editNameDialogFragment.show(fm, "fragment_edit_name");
+                AddSongDialogFragment addSongDialogFragment = AddSongDialogFragment.newInstance("Some Title");
+                addSongDialogFragment.show(fm, "fragment_add_song");
             }
         });
     }
