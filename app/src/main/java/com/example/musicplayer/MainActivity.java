@@ -8,12 +8,15 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,7 +27,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddTrackFragment.onAddEventListener {
 
     SharedPreferences sp;
     ArrayList<Track> trackList;
@@ -33,6 +36,15 @@ public class MainActivity extends AppCompatActivity {
     ImageButton nextImageButton;
     ImageButton prevImageButton;
     ImageButton addSongImageButton;
+    TrackAdapter trackAdapter;
+
+
+    @Override
+    public void addEvent(Track track) {
+        trackList.add(track);
+        trackAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +58,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         trackList = new ArrayList<Track>();
-        if (!sp.contains("firstRunFlag")){
+        if (!sp.contains("firstRunFlag")) {
             trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
-            "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
-            "One more cup of coffee",
-            "Bob Dylan"));
+                    "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
+                    "One more cup of coffee",
+                    "Bob Dylan"));
             trackList.add(new Track("https://www.syntax.org.il/xtra/bob1.m4a",
                     "https://i1.sndcdn.com/artworks-000148133727-rhhdkf-t500x500.jpg",
                     "Sara",
@@ -85,8 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     "Bob Dylan"));
 
 
-        }
-        else{
+        } else {
             try {
                 FileInputStream fis = openFileInput("trackList");
                 ObjectInputStream ois = new ObjectInputStream(fis);
@@ -101,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        TrackAdapter trackAdapter = new TrackAdapter(trackList, this);
+        trackAdapter = new TrackAdapter(trackList, this);
         trackAdapter.setListener(new TrackAdapter.MyTrackListener() {
             @Override
             public void onTrackClicked(int position, View view) {
@@ -109,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
                 FragmentManager fm = getSupportFragmentManager();
                 TrackDetailsFragment trackDetailsFragment = TrackDetailsFragment.newInstance(clickedTrack.getTitle(),
-                        clickedTrack.getArtist(),clickedTrack.getTrackLink(),clickedTrack.getPicLink());
+                        clickedTrack.getArtist(), clickedTrack.getTrackLink(), clickedTrack.getPicLink());
                 trackDetailsFragment.show(fm, "fragment_edit_name");
             }
 
@@ -118,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
+        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 int fromPosition = viewHolder.getAbsoluteAdapterPosition();
@@ -130,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                if (direction == ItemTouchHelper.LEFT | direction == ItemTouchHelper.RIGHT){
+                if (direction == ItemTouchHelper.LEFT | direction == ItemTouchHelper.RIGHT) {
                     new AlertDialog.Builder(MainActivity.this)
                             .setTitle("Delete track")
                             .setMessage("Are you sure you want to delete this track?")
@@ -167,8 +178,8 @@ public class MainActivity extends AppCompatActivity {
         playImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,MusicService.class);
-                intent.putExtra("command","new_instance");
+                Intent intent = new Intent(MainActivity.this, MusicService.class);
+                intent.putExtra("command", "new_instance");
                 intent.putExtra("trackList", trackList);
                 startService(intent);
             }
@@ -177,8 +188,8 @@ public class MainActivity extends AppCompatActivity {
         pauseImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,MusicService.class);
-                intent.putExtra("command","pause");
+                Intent intent = new Intent(MainActivity.this, MusicService.class);
+                intent.putExtra("command", "pause");
                 startService(intent);
             }
         });
@@ -186,8 +197,8 @@ public class MainActivity extends AppCompatActivity {
         nextImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,MusicService.class);
-                intent.putExtra("command","next");
+                Intent intent = new Intent(MainActivity.this, MusicService.class);
+                intent.putExtra("command", "next");
                 startService(intent);
             }
         });
@@ -195,8 +206,8 @@ public class MainActivity extends AppCompatActivity {
         prevImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,MusicService.class);
-                intent.putExtra("command","prev");
+                Intent intent = new Intent(MainActivity.this, MusicService.class);
+                intent.putExtra("command", "prev");
                 startService(intent);
             }
         });
@@ -205,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getSupportFragmentManager();
-                AddSongDialogFragment addSongDialogFragment = AddSongDialogFragment.newInstance("Some Title");
+                AddTrackFragment addSongDialogFragment = AddTrackFragment.newInstance("Some Title");
                 addSongDialogFragment.show(fm, "fragment_add_song");
             }
         });
