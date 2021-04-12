@@ -19,10 +19,20 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
 
     private List<Track> trackList;
     private Context context;
+    private MyTrackListener listener;
 
     public TrackAdapter(List<Track> trackList, Context context) {
         this.trackList = trackList;
         this.context = context;
+    }
+
+    interface MyTrackListener{
+        void onTrackClicked(int position, View view);
+        void onTrackLongClicked(int position, View view);
+    }
+
+    public void setListener(MyTrackListener listener){
+        this.listener = listener;
     }
 
     public class TrackViewHolder extends RecyclerView.ViewHolder{
@@ -36,6 +46,23 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
             trackImageIv = itemView.findViewById(R.id.track_cell_image);
             trackTitleTv = itemView.findViewById(R.id.track_cell_title);
             trackArtistTv = itemView.findViewById(R.id.track_cell_artist);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null)
+                        listener.onTrackClicked(getAbsoluteAdapterPosition(),v);
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (listener != null)
+                        listener.onTrackLongClicked(getAbsoluteAdapterPosition(),v);
+                    return false;
+                }
+            });
         }
     }
 

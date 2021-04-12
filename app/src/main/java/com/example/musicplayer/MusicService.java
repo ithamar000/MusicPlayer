@@ -22,9 +22,10 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     final int NOTIF_ID = 1;
 
-    ArrayList<Track> trackList = new ArrayList<Track>();
+    ArrayList<Track> trackList;
+    int currentPlaying = (-1);
     MediaPlayer mediaPlayer = new MediaPlayer();
-    int currentPlaying = 0;
+
 
     @Nullable
     @Override
@@ -39,15 +40,17 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.reset();
 
+        ArrayList<Track> trackList = new ArrayList<Track>();
+
         String channelID = "channel_id";
         String channelName = "music_channel";
 
         NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= 26) {
-            NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_LOW);
             manager.createNotificationChannel(channel);
         }
-        NotificationCompat.Builder builder =  new NotificationCompat.Builder(this,channelID);
+        NotificationCompat.Builder builder =  new NotificationCompat.Builder(this,channelID).setPriority(NotificationCompat.PRIORITY_LOW);
 
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.music_notif);
 
@@ -100,11 +103,19 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         switch (command){
             case ("new_instance"):
                 if(!mediaPlayer.isPlaying()){
+
+
                     trackList = (ArrayList<Track>) intent.getSerializableExtra("trackList");
                     try{
-                        //mediaPlayer.reset(); ?????????
-                        mediaPlayer.setDataSource(trackList.get(0).getTrackLink());
-                        mediaPlayer.prepareAsync();
+                        if(currentPlaying == (-1)) {
+                            if (trackList.size() > 0) {
+                                mediaPlayer.setDataSource(trackList.get(0).getTrackLink());
+                                currentPlaying = 0;
+                                mediaPlayer.prepareAsync();
+                            }
+                        }
+                        else
+                            mediaPlayer.start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
