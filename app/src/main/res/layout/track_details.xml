@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_add_song"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="25dp"
+    android:padding="20dp"
+    >
+
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@mipmap/ic_launcher_round"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="75dp"
+            android:id="@+id/IV_track_pic"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/IV_track_pic"
+            android:layout_centerHorizontal="true"
+            android:text="TRACK TITLE"
+            android:layout_margin="25dp"
+            android:textSize="25sp"
+            android:id="@+id/TV_track_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TV_track_title"
+            android:layout_centerHorizontal="true"
+            android:text="by"
+            android:textSize="15sp"
+            android:id="@+id/TV_by" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TV_by"
+            android:layout_centerHorizontal="true"
+            android:text="Artist Name"
+            android:layout_margin="15dp"
+            android:textSize="20sp"
+            android:id="@+id/TV_artist_name" />
+
+</RelativeLayout>

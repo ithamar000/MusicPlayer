@@ -4,13 +4,15 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_margin="25dp">
+    android:layout_margin="25dp"
+    >
 
     <TextView
         android:id="@+id/TV_title"
         android:text="Track title:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:layout_alignParentTop="true"/>
 
     <EditText
@@ -76,4 +78,14 @@
         android:src="@android:drawable/ic_menu_camera"
         android:layout_below="@+id/TV_pic_link"
         android:layout_marginTop="8dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ADD"
+        android:id="@+id/btn_add_song"
+        android:layout_below="@id/ET_pic_link"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"/>
+
 </RelativeLayout>

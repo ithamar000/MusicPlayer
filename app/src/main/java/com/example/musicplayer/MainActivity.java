@@ -105,7 +105,12 @@ public class MainActivity extends AppCompatActivity {
         trackAdapter.setListener(new TrackAdapter.MyTrackListener() {
             @Override
             public void onTrackClicked(int position, View view) {
-                //TODO Open new activity with details about song
+                Track clickedTrack = trackList.get(position);
+
+                FragmentManager fm = getSupportFragmentManager();
+                TrackDetailsFragment trackDetailsFragment = TrackDetailsFragment.newInstance(clickedTrack.getTitle(),
+                        clickedTrack.getArtist(),clickedTrack.getTrackLink(),clickedTrack.getPicLink());
+                trackDetailsFragment.show(fm, "fragment_edit_name");
             }
 
             @Override
@@ -138,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    trackAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                                    trackAdapter.notifyItemChanged(viewHolder.getAbsoluteAdapterPosition());
                                 }
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
