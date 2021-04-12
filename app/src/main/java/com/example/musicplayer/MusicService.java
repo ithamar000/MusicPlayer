@@ -88,7 +88,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
+        playSong(true);
     }
 
     @Override
@@ -130,9 +130,14 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
                     mediaPlayer.pause();
                 break;
             case ("next"):
-                //ADD FUNCTIONALITY
+                if(mediaPlayer.isPlaying())
+                    mediaPlayer.stop();
+                playSong(true);
                 break;
             case ("prev"):
+                if(mediaPlayer.isPlaying())
+                    mediaPlayer.stop();
+                playSong(false);
                 break;
             case ("close"):
                 stopSelf();
@@ -140,6 +145,27 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         }
 
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void playSong(boolean isNext)  {
+        if(isNext) {
+            currentPlaying++;
+            if (currentPlaying == trackList.size())
+                currentPlaying = 0;
+        }
+        else {
+            currentPlaying--;
+            if(currentPlaying < 0)
+                currentPlaying = trackList.size() - 1;
+        }
+        mediaPlayer.reset();
+        try {
+            mediaPlayer.setDataSource(trackList.get(currentPlaying).getTrackLink());
+            mediaPlayer.prepareAsync();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
