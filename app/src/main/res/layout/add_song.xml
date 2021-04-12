@@ -3,7 +3,6 @@
     android:id="@+id/layout_add_song"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
     android:orientation="vertical"
     android:layout_margin="25dp">
 
@@ -12,7 +11,7 @@
         android:text="Track title:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentTop="true"/>
 
     <EditText
         android:id="@+id/ET_title"
@@ -36,4 +35,45 @@
         android:inputType="text"
         android:imeOptions="actionDone"
         android:layout_below="@id/TV_artist_name"/>
+
+    <TextView
+        android:id="@+id/TV_track_link"
+        android:text="Track link:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ET_artist_name"/>
+
+    <EditText
+        android:id="@+id/ET_track_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:imeOptions="actionDone"
+        android:layout_below="@id/TV_track_link" />
+
+    <TextView
+        android:id="@+id/TV_pic_link"
+        android:text="Picture link:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ET_track_link"/>
+
+    <EditText
+        android:id="@+id/ET_pic_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:imeOptions="actionDone"
+        android:layout_below="@id/TV_pic_link"
+        android:layout_toEndOf="@+id/camera_icon"
+        android:textSize="10sp"
+        android:hint="Press the camera icon to choose manually" />
+
+    <ImageButton
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:id="@+id/camera_icon"
+        android:src="@android:drawable/ic_menu_camera"
+        android:layout_below="@+id/TV_pic_link"
+        android:layout_marginTop="8dp"/>
 </RelativeLayout>
