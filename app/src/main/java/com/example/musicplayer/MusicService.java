@@ -103,8 +103,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
             case ("new_instance"):
                 if(!mediaPlayer.isPlaying()){
 
-
-                    trackListSingelton.trackList = (ArrayList<Track>) intent.getSerializableExtra("trackList");
                     try{
                         if(trackListSingelton.currentlyPlayingIndex == (-1)) {
                             if (trackListSingelton.trackList.size() > 0) {

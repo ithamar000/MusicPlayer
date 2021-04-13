@@ -1,5 +1,8 @@
 package com.example.musicplayer;
 
+
+import android.widget.ImageView;
+
 import java.io.Serializable;
 
 public class Track implements Serializable {
@@ -7,6 +10,7 @@ public class Track implements Serializable {
     private String picLink;
     private String title;
     private String artist;
+
 
     public Track(String trackLink, String picLink, String title, String artist) {
         this.trackLink = trackLink;
