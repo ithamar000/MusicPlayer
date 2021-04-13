@@ -31,7 +31,7 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity implements AddTrackFragment.onAddEventListener {
 
     SharedPreferences sp;
-    ArrayList<Track> trackList;
+    TrackListSingelton trackListSingelton;
     ImageButton playImageButton;
     ImageButton pauseImageButton;
     ImageButton nextImageButton;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
 
     @Override
     public void addEvent(Track track) {
-        trackList.add(track);
+        trackListSingelton.trackList.add(track);
         trackAdapter.notifyDataSetChanged();
     }
 
@@ -57,51 +57,26 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        trackList = new ArrayList<Track>();
+        trackListSingelton = TrackListSingelton.getInstance();
         if (!sp.contains("firstRunFlag")) {
-            trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
+            trackListSingelton.trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
                     "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
                     "One more cup of coffee",
                     "Bob Dylan"));
-            trackList.add(new Track("https://www.syntax.org.il/xtra/bob1.m4a",
+            trackListSingelton.trackList.add(new Track("https://www.syntax.org.il/xtra/bob1.m4a",
                     "https://i1.sndcdn.com/artworks-000148133727-rhhdkf-t500x500.jpg",
                     "Sara",
                     "Bob Dylan"));
-            trackList.add(new Track("https://www.syntax.org.il/xtra/bob2.mp3",
+            trackListSingelton.trackList.add(new Track("https://www.syntax.org.il/xtra/bob2.mp3",
                     "https://images-na.ssl-images-amazon.com/images/I/71a7yWLeyTL._SL1500_.jpg",
                     "The man in me",
                     "Bob Dylan"));
-            trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
-                    "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
-                    "One more cup of coffee",
-                    "Bob Dylan"));
-            trackList.add(new Track("https://www.syntax.org.il/xtra/bob1.m4a",
-                    "https://i1.sndcdn.com/artworks-000148133727-rhhdkf-t500x500.jpg",
-                    "Sara",
-                    "Bob Dylan"));
-            trackList.add(new Track("https://www.syntax.org.il/xtra/bob2.mp3",
-                    "https://images-na.ssl-images-amazon.com/images/I/71a7yWLeyTL._SL1500_.jpg",
-                    "The man in me",
-                    "Bob Dylan"));
-            trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
-                    "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
-                    "One more cup of coffee",
-                    "Bob Dylan"));
-            trackList.add(new Track("https://www.syntax.org.il/xtra/bob1.m4a",
-                    "https://i1.sndcdn.com/artworks-000148133727-rhhdkf-t500x500.jpg",
-                    "Sara",
-                    "Bob Dylan"));
-            trackList.add(new Track("https://www.syntax.org.il/xtra/bob2.mp3",
-                    "https://images-na.ssl-images-amazon.com/images/I/71a7yWLeyTL._SL1500_.jpg",
-                    "The man in me",
-                    "Bob Dylan"));
-
-
-        } else {
+        }
+        else {
             try {
                 FileInputStream fis = openFileInput("trackList");
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                trackList = (ArrayList<Track>) ois.readObject();
+                trackListSingelton.trackList = (ArrayList<Track>) ois.readObject();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -109,14 +84,13 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-
         }
 
-        trackAdapter = new TrackAdapter(trackList, this);
+        trackAdapter = new TrackAdapter(trackListSingelton.trackList, this);
         trackAdapter.setListener(new TrackAdapter.MyTrackListener() {
             @Override
             public void onTrackClicked(int position, View view) {
-                Track clickedTrack = trackList.get(position);
+                Track clickedTrack = trackListSingelton.trackList.get(position);
 
                 FragmentManager fm = getSupportFragmentManager();
                 TrackDetailsFragment trackDetailsFragment = TrackDetailsFragment.newInstance(clickedTrack.getTitle(),
@@ -134,8 +108,17 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 int fromPosition = viewHolder.getAbsoluteAdapterPosition();
                 int toPosition = target.getAbsoluteAdapterPosition();
-                Collections.swap(trackList, fromPosition, toPosition);
+                Collections.swap(trackListSingelton.trackList, fromPosition, toPosition);
+
+                if(trackListSingelton.currentlyPlayingIndex == fromPosition)
+                    trackListSingelton.currentlyPlayingIndex = toPosition;
+
+                if(trackListSingelton.currentlyPlayingIndex == toPosition)
+                    trackListSingelton.currentlyPlayingIndex = fromPosition;
+
                 recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+                if (trackListSingelton.currentlyPlayingIndex != (-1))
+                    trackListSingelton.currentlyPlayingIndex = trackListSingelton.trackList.indexOf(trackListSingelton.trackList.get(trackListSingelton.currentlyPlayingIndex));
                 return false;
             }
 
@@ -147,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
                             .setMessage("Are you sure you want to delete this track?")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    trackList.remove(viewHolder.getAbsoluteAdapterPosition());
+                                    trackListSingelton.trackList.remove(viewHolder.getAbsoluteAdapterPosition());
                                     trackAdapter.notifyItemRemoved(viewHolder.getAbsoluteAdapterPosition());
                                 }
                             })
@@ -180,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MusicService.class);
                 intent.putExtra("command", "new_instance");
-                intent.putExtra("trackList", trackList);
+                intent.putExtra("trackList", trackListSingelton.trackList);
                 startService(intent);
             }
         });
@@ -232,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
         try {
             FileOutputStream fos = openFileOutput("trackList", MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(trackList);
+            oos.writeObject(trackListSingelton.trackList);
             oos.close();
 
         } catch (FileNotFoundException e) {

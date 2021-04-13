@@ -22,8 +22,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     final int NOTIF_ID = 1;
 
-    ArrayList<Track> trackList;
-    int currentPlaying = (-1);
+    TrackListSingelton trackListSingelton;
     MediaPlayer mediaPlayer = new MediaPlayer();
 
 
@@ -40,7 +39,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.reset();
 
-        ArrayList<Track> trackList = new ArrayList<Track>();
+        trackListSingelton = TrackListSingelton.getInstance();
 
         String channelID = "channel_id";
         String channelName = "music_channel";
@@ -105,12 +104,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
                 if(!mediaPlayer.isPlaying()){
 
 
-                    trackList = (ArrayList<Track>) intent.getSerializableExtra("trackList");
+                    trackListSingelton.trackList = (ArrayList<Track>) intent.getSerializableExtra("trackList");
                     try{
-                        if(currentPlaying == (-1)) {
-                            if (trackList.size() > 0) {
-                                mediaPlayer.setDataSource(trackList.get(0).getTrackLink());
-                                currentPlaying = 0;
+                        if(trackListSingelton.currentlyPlayingIndex == (-1)) {
+                            if (trackListSingelton.trackList.size() > 0) {
+                                mediaPlayer.setDataSource(trackListSingelton.trackList.get(0).getTrackLink());
+                                trackListSingelton.currentlyPlayingIndex = 0;
                                 mediaPlayer.prepareAsync();
                             }
                         }
@@ -148,19 +147,20 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     }
 
     private void playSong(boolean isNext)  {
+
         if(isNext) {
-            currentPlaying++;
-            if (currentPlaying == trackList.size())
-                currentPlaying = 0;
+            trackListSingelton.currentlyPlayingIndex++;
+            if (trackListSingelton.currentlyPlayingIndex == trackListSingelton.trackList.size())
+                trackListSingelton.currentlyPlayingIndex = 0;
         }
         else {
-            currentPlaying--;
-            if(currentPlaying < 0)
-                currentPlaying = trackList.size() - 1;
+            trackListSingelton.currentlyPlayingIndex--;
+            if(trackListSingelton.currentlyPlayingIndex < 0)
+                trackListSingelton.currentlyPlayingIndex = trackListSingelton.trackList.size() - 1;
         }
         mediaPlayer.reset();
         try {
-            mediaPlayer.setDataSource(trackList.get(currentPlaying).getTrackLink());
+            mediaPlayer.setDataSource(trackListSingelton.trackList.get(trackListSingelton.currentlyPlayingIndex).getTrackLink());
             mediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
