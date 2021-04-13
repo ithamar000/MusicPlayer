@@ -68,17 +68,17 @@
         android:inputType="text"
         android:imeOptions="actionDone"
         android:layout_below="@id/TV_pic_link"
-        android:layout_toEndOf="@+id/camera_icon"
+        android:layout_toEndOf="@+id/btn_add_pic"
         android:textSize="10sp"
         android:hint="Press the camera icon to choose manually" />
 
     <ImageButton
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:id="@+id/camera_icon"
+        android:id="@+id/btn_add_pic"
         android:src="@android:drawable/ic_menu_camera"
         android:layout_below="@+id/TV_pic_link"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp" />
 
     <Button
         android:layout_width="wrap_content"

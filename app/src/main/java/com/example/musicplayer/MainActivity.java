@@ -1,6 +1,7 @@
 package com.example.musicplayer;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -44,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
         trackList.add(track);
         trackAdapter.notifyDataSetChanged();
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
