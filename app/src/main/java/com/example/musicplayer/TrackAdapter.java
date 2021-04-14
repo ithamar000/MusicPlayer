@@ -39,6 +39,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         ImageView trackImageIv;
         TextView trackTitleTv;
         TextView trackArtistTv;
+        ImageView playingIv;
 
         public TrackViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -46,6 +47,8 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
             trackImageIv = itemView.findViewById(R.id.track_cell_image);
             trackTitleTv = itemView.findViewById(R.id.track_cell_title);
             trackArtistTv = itemView.findViewById(R.id.track_cell_artist);
+            playingIv = itemView.findViewById(R.id.track_cell_playing_icon);
+
             trackTitleTv.setSelected(true);
 
             itemView.setOnClickListener(new View.OnClickListener() {

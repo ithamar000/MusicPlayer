@@ -34,7 +34,8 @@ public class AddTrackFragment extends DialogFragment {
 
     private EditText mEditText;
     final int CAMERA_REQUEST = 1;
-    final int WRITE_PERMISSION_REQUEST = 1;
+    final int GALLERY_REQUEST = 2;
+    final int WRITE_PERMISSION_REQUEST = 3;
     File file;
 
 
@@ -78,7 +79,7 @@ public class AddTrackFragment extends DialogFragment {
         EditText trackLinkET = v.findViewById(R.id.ET_track_link);
         Button okBtn = v.findViewById(R.id.btn_add_song);
         ImageButton picBtn = v.findViewById(R.id.btn_add_pic);
-        picBtn.setVisibility(View.GONE); //TODO fix before making visible
+        ImageButton galleryBtn = v.findViewById(R.id.btn_add_pic_from_gallery);
 
         okBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -89,6 +90,21 @@ public class AddTrackFragment extends DialogFragment {
 
                 addEventListener.addEvent(new Track(trackLink, trackPicLink, trackName, trackArtist));
                 dismiss();
+            }
+        });
+
+        galleryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= 23){
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},WRITE_PERMISSION_REQUEST);
+                }
+                file = new File(Environment.getExternalStorageDirectory(),"pic.jpg");
+                Uri fileUri = FileProvider.getUriForFile(getContext(), getContext().getApplicationContext().getPackageName() + ".provider", file);
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,fileUri);
+                AddTrackFragment.this.startActivityForResult(intent,GALLERY_REQUEST);
             }
         });
 
@@ -123,10 +139,14 @@ public class AddTrackFragment extends DialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST){
-            EditText trackPicET = getView().findViewById(R.id.ET_pic_link);
+        EditText trackPicET;
+        if (requestCode == CAMERA_REQUEST) {
+            trackPicET = getView().findViewById(R.id.ET_pic_link);
             trackPicET.setText(file.getAbsolutePath());
-
+        }
+            if (requestCode == GALLERY_REQUEST){
+                trackPicET = getView().findViewById(R.id.ET_pic_link);
+                trackPicET.setText(file.getAbsolutePath());
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.musicplayer;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -9,12 +10,15 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.Notification;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -48,6 +52,19 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
         trackAdapter.notifyDataSetChanged();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +77,18 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         trackListSingelton = TrackListSingelton.getInstance();
+        trackListSingelton.currentlyPlayingTV = findViewById(R.id.tv_currently_playing);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (isMyServiceRunning(MusicService.class)){
+                trackListSingelton.currentlyPlayingTV.setText(trackListSingelton.trackList
+                        .get(trackListSingelton.currentlyPlayingIndex).getTitle());
+                trackListSingelton.currentlyPlayingTV.setVisibility(View.VISIBLE);
+
+            }
+        }
+
+
         if (!sp.contains("firstRunFlag")) {
             trackListSingelton.trackList.add(new Track("https://www.syntax.org.il/xtra/bob.m4a",
                     "https://img.discogs.com/zjRP8Xyhtj_QBVmzYyc5I9EQ2Pc=/fit-in/521x523/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-4882204-1378373149-1399.jpeg.jpg",
@@ -108,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
         ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+
                 int fromPosition = viewHolder.getAbsoluteAdapterPosition();
                 int toPosition = target.getAbsoluteAdapterPosition();
 
@@ -121,7 +151,8 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
 
                 recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
                 if (trackListSingelton.currentlyPlayingIndex != (-1))
-                    trackListSingelton.currentlyPlayingIndex = trackListSingelton.trackList.indexOf(trackListSingelton.trackList.get(trackListSingelton.currentlyPlayingIndex));
+                    trackListSingelton.currentlyPlayingIndex = trackListSingelton.trackList
+                            .indexOf(trackListSingelton.trackList.get(trackListSingelton.currentlyPlayingIndex));
                 return false;
             }
 
@@ -173,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements AddTrackFragment.
         nextImageButton = findViewById(R.id.next_btn);
         prevImageButton = findViewById(R.id.prev_btn);
         addSongImageButton = findViewById(R.id.add_song_btn);
+
 
 
         playImageButton.setOnClickListener(new View.OnClickListener() {

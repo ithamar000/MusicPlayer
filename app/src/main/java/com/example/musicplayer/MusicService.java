@@ -10,7 +10,9 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -24,6 +26,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     TrackListSingelton trackListSingelton;
     MediaPlayer mediaPlayer = new MediaPlayer();
+    RemoteViews remoteViews;
 
 
     @Nullable
@@ -51,7 +54,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         }
         NotificationCompat.Builder builder =  new NotificationCompat.Builder(this,channelID).setPriority(NotificationCompat.PRIORITY_LOW);
 
-        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.music_notif);
+        remoteViews = new RemoteViews(getPackageName(), R.layout.music_notif);
 
 
         Intent playIntent = new Intent(this, MusicService.class);
@@ -79,6 +82,10 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         PendingIntent closePendingIntent = PendingIntent.getService(this, 4, closeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.close_btn, closePendingIntent);
 
+        if(trackListSingelton.currentlyPlayingIndex != (-1))
+            remoteViews.setTextViewText(R.id.song_title,trackListSingelton.trackList
+                    .get(trackListSingelton.currentlyPlayingIndex).getTitle() );
+
         builder.setCustomContentView(remoteViews);
         builder.setSmallIcon(android.R.drawable.ic_media_play);
 
@@ -92,6 +99,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        trackListSingelton.currentlyPlayingTV.setText(trackListSingelton.trackList
+                .get(trackListSingelton.currentlyPlayingIndex).getTitle());
+        trackListSingelton.currentlyPlayingTV.setVisibility(View.VISIBLE);
+
+
         mediaPlayer.start();
     }
 
