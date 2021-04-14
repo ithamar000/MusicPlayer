@@ -27,6 +27,23 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     TrackListSingelton trackListSingelton;
     MediaPlayer mediaPlayer = new MediaPlayer();
     RemoteViews remoteViews;
+    NotificationManager manager;
+    NotificationCompat.Builder builder;
+
+    private void updateNotification(){
+
+        int api = Build.VERSION.SDK_INT;
+        if(trackListSingelton.currentlyPlayingIndex != (-1))
+            remoteViews.setTextViewText(R.id.song_title,trackListSingelton.trackList
+                    .get(trackListSingelton.currentlyPlayingIndex).getTitle() );
+
+        // update the notification
+        if (api < Build.VERSION_CODES.HONEYCOMB) {
+            manager.notify(NOTIF_ID, builder.build());
+        }else if (api >= Build.VERSION_CODES.HONEYCOMB) {
+            manager.notify(NOTIF_ID, builder.build());
+        }
+    }
 
 
     @Nullable
@@ -47,12 +64,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         String channelID = "channel_id";
         String channelName = "music_channel";
 
-        NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= 26) {
             NotificationChannel channel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_LOW);
             manager.createNotificationChannel(channel);
         }
-        NotificationCompat.Builder builder =  new NotificationCompat.Builder(this,channelID).setPriority(NotificationCompat.PRIORITY_LOW);
+        builder =  new NotificationCompat.Builder(this,channelID).setPriority(NotificationCompat.PRIORITY_LOW);
 
         remoteViews = new RemoteViews(getPackageName(), R.layout.music_notif);
 
@@ -82,9 +99,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         PendingIntent closePendingIntent = PendingIntent.getService(this, 4, closeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.close_btn, closePendingIntent);
 
-        if(trackListSingelton.currentlyPlayingIndex != (-1))
-            remoteViews.setTextViewText(R.id.song_title,trackListSingelton.trackList
-                    .get(trackListSingelton.currentlyPlayingIndex).getTitle() );
 
         builder.setCustomContentView(remoteViews);
         builder.setSmallIcon(android.R.drawable.ic_media_play);
@@ -102,7 +116,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         trackListSingelton.currentlyPlayingTV.setText(trackListSingelton.trackList
                 .get(trackListSingelton.currentlyPlayingIndex).getTitle());
         trackListSingelton.currentlyPlayingTV.setVisibility(View.VISIBLE);
-
+        updateNotification();
 
         mediaPlayer.start();
     }
